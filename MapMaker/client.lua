@@ -284,6 +284,7 @@ AddEventHandler("MapMaker:sendData", function(data)
 		local toSpawn = CreateObject(GetHashKey(k.n), k.x, k.y, k.z, false, true, false)
 		FreezeEntityPosition(toSpawn, true)
 		SetEntityHeading(toSpawn, k.h)
+		SetEntityCoords(toSpawn, k.x, k.y, k.z)
 	end
 
 	lData = data
@@ -296,6 +297,7 @@ AddEventHandler("MapMaker:askToSpawnNew", function(array)
 	local toSpawn = CreateObject(GetHashKey(array.n), array.x, array.y, array.z, false, true, false)
 	FreezeEntityPosition(toSpawn, true)
 	SetEntityHeading(toSpawn, array.h)
+	SetEntityCoords(toSpawn, array.x, array.y, array.z)
 
 	table.insert(lData, array)
 
@@ -316,6 +318,11 @@ RegisterNetEvent("MapMaker:openMenu")
 AddEventHandler("MapMaker:openMenu", function(canOpen)
 
 	if(canOpen) then
+
+		if(DoesEntityExist(object)) then
+			DeleteObject(object)
+		end
+
 		activate = not activate
 		mainMenu = true
 		menuId = 0
