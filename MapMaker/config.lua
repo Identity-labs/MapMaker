@@ -27,7 +27,8 @@ settings["en"] = {
 	successfull = "You successfully added this object !",
 	deleteSuccess = "You successfully deleted the object !",
 	spawnByName = "Spawn object by name",
-	searchObject = "Search objects by tags"
+	searchObject = "Search objects by tags",
+	deleteObject = "Deleted placed object"
 }
 
 settings["fr"] = {
@@ -43,5 +44,6 @@ settings["fr"] = {
 	successfull = "Vous venez de placer cet objet !",
 	deleteSuccess = "Vous venez de supprimer cet objet !",
 	spawnByName = "Spawn un objet par le nom",
-	searchObject = "chercher un objet par un mot clé"
+	searchObject = "chercher un objet par un mot clé",
+	deleteObject = "Supprimer un objet placé"
 }

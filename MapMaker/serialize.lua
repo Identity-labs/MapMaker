@@ -67,7 +67,7 @@ function TableToXML(Tab, filename)
 	
 	TableToXML_(Tab, "", 0)
 	
-	local file,err = io.open( filename, "wb" )
+	local file = io.open( filename, "wb" )
 
 	file:write(Str)
 	file:close()

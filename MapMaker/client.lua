@@ -20,10 +20,9 @@ freecam = false
 local coordsBefore = -1
 
 
-local lData = {}
+lData = {}
 
 Citizen.CreateThread(function()
-
 	while true do
 		Citizen.Wait(0)
 
@@ -177,6 +176,7 @@ function tick()
 				new_x = math.max(math.min(20.0, rotation.x + rightAxisY*-1.0*2), -89.5)
 				SetCamRot(camera, new_x, 0.0, new_z, 2)
 			end
+
 		end
 	end
 end
@@ -280,26 +280,29 @@ end
 
 RegisterNetEvent("MapMaker:sendData")
 AddEventHandler("MapMaker:sendData", function(data)
-	for _,k in pairs(data) do
+	print("get")
+	print(#data)
+	for i,k in pairs(data) do
+		print(k.n)
 		local toSpawn = CreateObject(GetHashKey(k.n), k.x, k.y, k.z, false, true, false)
 		FreezeEntityPosition(toSpawn, true)
 		SetEntityHeading(toSpawn, k.h)
 		SetEntityCoords(toSpawn, k.x, k.y, k.z)
+		lData[i] = {oID = toSpawn,n=k.n,x=k.x,y=k.y,z=k.z,h=k.h}
 	end
 
-	lData = data
 end)
 
 
 RegisterNetEvent("MapMaker:askToSpawnNew")
-AddEventHandler("MapMaker:askToSpawnNew", function(array)
+AddEventHandler("MapMaker:askToSpawnNew", function(array, number)
 
 	local toSpawn = CreateObject(GetHashKey(array.n), array.x, array.y, array.z, false, true, false)
 	FreezeEntityPosition(toSpawn, true)
 	SetEntityHeading(toSpawn, array.h)
 	SetEntityCoords(toSpawn, array.x, array.y, array.z)
 
-	table.insert(lData, array)
+	lData[number] = {oID = toSpawn, x = array.x, y = array.y, z = array.z, h = array.h}
 
 end)
 
@@ -330,6 +333,23 @@ AddEventHandler("MapMaker:openMenu", function(canOpen)
 		launchSystem()
 	end
 		
+end)
+
+
+
+RegisterNetEvent("MapMaker:askDeleteObject_c")
+AddEventHandler("MapMaker:askDeleteObject_c", function(objectID)
+	DeleteObject(objectID)
+
+	local newArray = {}
+	for i,k in pairs(lData) do
+		if(k.oID ~= objectID) then
+			newArray[i] = k
+		end
+	end
+
+	lData = {}
+	lData = newArray
 end)
 
 

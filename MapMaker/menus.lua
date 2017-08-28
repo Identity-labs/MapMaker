@@ -22,6 +22,8 @@ Citizen.CreateThread(function()
 					showCategorieMenu(menuId)
 				elseif(menuId == -2) then -- In sub menu
 					renderSubMenu()
+				elseif(menuId == -3) then -- In del menu
+					renderDelMenu()
 				end
 			else
 				renderSubMod()
@@ -93,6 +95,18 @@ function renderDefaultMenu()
 			launchSystem()
 		else
 				
+		end
+	end)
+
+
+	TriggerEvent("GUI:MapOption",settings[lang].deleteObject, function(cb)
+		if(cb) then
+			menuId = -3
+			countMin = 0
+			countMax = 23
+			searchObjectModelArrayCount = #lData
+		else
+						
 		end
 	end)
 
@@ -527,6 +541,39 @@ function searchObjectModel()
 
 	end)
 
+end
+
+
+
+function renderDelMenu()
+	TriggerEvent("GUI:MapTitle", settings[lang].deleteObject)
+
+	TriggerEvent("GUI:MapOption","< return", function(cb)
+		if(cb) then
+			inSubMod = false
+			menuId = 0
+		else
+			
+		end
+	end)
+
+
+	for i,k in pairs(lData) do
+		print(i)
+		print(k)
+		if(i>=countMin and i<=countMax) then
+			TriggerEvent("GUI:MapDelOption",k.n, k.oID, function(cb)
+				if(cb) then
+					TriggerServerEvent("MapMaker:askDeleteObject", i, k.oID)
+					menuId = 0
+				else
+			
+				end
+			end)
+		end
+	end
+
+	TriggerEvent("GUI:MapUpdate")
 end
 
 

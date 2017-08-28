@@ -11,7 +11,7 @@ AddEventHandler("MapMaker:addObject", function(name,x1,y1,z1,heading)
 
 	for _,k in pairs(players) do
 		if(k ~= _source) then
-			TriggerClientEvent("MapMaker:askToSpawnNew", k, {n=name,x=x1,y=y1,z=z1,h=heading})
+			TriggerClientEvent("MapMaker:askToSpawnNew", k, {n=name,x=x1,y=y1,z=z1,h=heading}, #MapObjects)
 		end
 	end
 
@@ -47,6 +47,29 @@ AddEventHandler("MapMaker:RequestData", function()
 	local _source = source
 	table.insert(players,_source)
 	TriggerClientEvent("MapMaker:sendData", _source, MapObjects)
+end)
+
+
+
+RegisterServerEvent("MapMaker:askDeleteObject")
+AddEventHandler("MapMaker:askDeleteObject", function(id, objectID)
+
+	local newArray = {}
+	for i, k in pairs(MapObjects) do
+		if(i~=id) then
+			newArray[i] = k
+		end
+	end
+
+	MapObjects = {}
+	MapObjects = newArray
+
+	TableToXML(MapObjects, "MapMakerList.xml")
+
+	for _,k in pairs(players) do
+		TriggerClientEvent("MapMaker:askDeleteObject_c", k, objectID)
+	end
+
 end)
 
 

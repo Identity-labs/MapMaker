@@ -178,6 +178,64 @@ end
 
 
 
+function Menu.DelOption(option, objectToDel)
+	optionCount = optionCount + 1
+
+	local thisOption = nil
+	if(currentOption == optionCount) then
+		thisOption = true
+	else
+		thisOption = false
+	end
+
+	if(currentOption <= GUI.maxVisOptions and optionCount <= GUI.maxVisOptions) then
+		GUI.Text(option, GUI.optionText, {menuX - 0.1, optionCount * 0.035 + 0.125},  {0.5, 0.5 }, false)
+		GUI.Rect(GUI.optionRect, { menuX, optionCount * 0.035 + 0.1415 }, { 0.27, 0.035 })
+		if(thisOption) then
+
+			if(DoesEntityExist(objectToDel)) then
+				object = objectToDel
+
+				TriggerEvent("GUI:requestGo", currentOption, function(result)
+					if(result) then
+						currentOption = currentOption -1
+						lastObjectModel = option
+					end
+				end)
+			end
+
+			GUI.Rect(GUI.scroller, { menuX, optionCount * 0.035 + 0.1415 }, { 0.27, 0.035 })
+		end
+	elseif (optionCount > currentOption - GUI.maxVisOptions and optionCount <= currentOption) then
+		GUI.Text(option, GUI.optionText, { menuX - 0.1, optionCount - (currentOption - GUI.maxVisOptions) * 0.035 + 0.125 }, { 0.5, 0.5 }, false);
+		GUI.Rect(GUI.optionRect, { menuX, optionCount - (currentOption - GUI.maxVisOptions) * 0.035+0.1415 }, { 0.27, 0.035 });
+		if(thisOption) then
+
+			if(DoesEntityExist(objectToDel)) then
+				object = objectToDel
+
+				TriggerEvent("GUI:requestGo", currentOption, function(result)
+					if(result) then
+						currentOption = currentOption -1
+						lastObjectModel = option
+					end
+				end)
+			end
+
+			GUI.Rect(GUI.scroller, { menuX, optionCount - (currentOption - maxVisOptions) * 0.035 + 0.1415 }, { 0.27, 0.035 })
+			
+		end
+	end
+
+	if (optionCount == currentOption and selectPressed) then
+		return true
+	end
+
+	return false
+end
+
+
+
 function Menu.Bool(option, bool, cb)
 	Menu.Option(option)
 
@@ -303,6 +361,13 @@ AddEventHandler("GUI:MapSpawnOption", function(option, cb)
 	inOptions = true
 
 	cb(Menu.SpeOption(option))
+end)
+
+RegisterNetEvent("GUI:MapDelOption")
+AddEventHandler("GUI:MapDelOption", function(option, objectToDel, cb)
+	inOptions = true
+
+	cb(Menu.DelOption(option, objectToDel))
 end)
 
 RegisterNetEvent("GUI:MapBool")
